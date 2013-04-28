@@ -1,0 +1,8 @@
+# compiled class files
+*.class
+# jar files
+*.jar
+*.classpath
+*.gitattributes
+*.project
+*.settings
