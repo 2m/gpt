@@ -11,13 +11,14 @@ public class MrdDecodeTest {
 	@Test
 	public void shouldDecodeMrd() {
 		BigInteger p = BigInteger.valueOf(2);
-		BigInteger m = BigInteger.valueOf(4);
-		BigInteger mod = p.pow(m.intValue());
+		BigInteger m = BigInteger.valueOf(1);
+		BigInteger n = BigInteger.valueOf(4);
+		BigInteger mod = p.pow(m.multiply(n).intValue());
 		
 		List<NonPrimeFieldElement> s = new ArrayList<>();
-		s.add(new NonPrimeFieldElement(p, m, 2));
-		s.add(new NonPrimeFieldElement(p, m, 5));
-		s.add(new NonPrimeFieldElement(p, m, 7));
+		s.add(new NonPrimeFieldElement(p, m, n, 2));
+		s.add(new NonPrimeFieldElement(p, m, n, 5));
+		s.add(new NonPrimeFieldElement(p, m, n, 7));
 		
 		LinearizedPolynomial<NonPrimeFieldElement> syndromePolynomial = new LinearizedPolynomial<>(mod);
 		int d = 4;
@@ -26,11 +27,11 @@ public class MrdDecodeTest {
 		}
 		
 		LinearizedPolynomial<NonPrimeFieldElement> fi_1 = new LinearizedPolynomial<>(mod);
-		fi_1.setCoef(d-1, new NonPrimeFieldElement(p, m, 0));		
+		fi_1.setCoef(d-1, new NonPrimeFieldElement(p, m, n, 0));		
 		LinearizedPolynomial<NonPrimeFieldElement> fi = syndromePolynomial;
 		
 		LinearizedPolynomial<NonPrimeFieldElement> bi_1 = new LinearizedPolynomial<>(mod);
-		bi_1.setCoef(1, new NonPrimeFieldElement(p, m, 0));
+		bi_1.setCoef(1, new NonPrimeFieldElement(p, m, n, 0));
 		LinearizedPolynomial<NonPrimeFieldElement> bi_2 = new LinearizedPolynomial<>(mod);
 		LinearizedPolynomial<NonPrimeFieldElement> bi = null;
 		
@@ -89,10 +90,10 @@ public class MrdDecodeTest {
 		System.out.println(zMatrix);
 		
 		List<FieldElement> hList = new ArrayList<>();
-		hList.add(new NonPrimeFieldElement(p, m, BigInteger.valueOf(0)));
-		hList.add(new NonPrimeFieldElement(p, m, BigInteger.valueOf(1)));
-		hList.add(new NonPrimeFieldElement(p, m, BigInteger.valueOf(2)));
-		hList.add(new NonPrimeFieldElement(p, m, BigInteger.valueOf(3)));
+		hList.add(new NonPrimeFieldElement(p, m, n, BigInteger.valueOf(0)));
+		hList.add(new NonPrimeFieldElement(p, m, n, BigInteger.valueOf(1)));
+		hList.add(new NonPrimeFieldElement(p, m, n, BigInteger.valueOf(2)));
+		hList.add(new NonPrimeFieldElement(p, m, n, BigInteger.valueOf(3)));
 		
 		Matrix<NonPrimeFieldElement> hMatrix = new Matrix<>(d - 2 + 1, m.intValue());
 		for (int row = 0; row < d - 2 + 1; row++) {

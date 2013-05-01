@@ -9,27 +9,35 @@ import org.junit.Test;
 public class NonPrimeFieldElementTest {
 	
 	@Test
-	public void shouldCreate() {
-		new NonPrimeFieldElement(2, 3, -1);
-		new NonPrimeFieldElement(2, 3, 0);
-		new NonPrimeFieldElement(2, 3, 1);
-		new NonPrimeFieldElement(2, 3, 2);
-		new NonPrimeFieldElement(2, 3, 3);
-		new NonPrimeFieldElement(2, 3, 4);
-		new NonPrimeFieldElement(2, 3, 5);
-		new NonPrimeFieldElement(2, 3, 6);
+	public void shouldCreate_2_3_1() {
+		int p = 2;
+		int m = 3;
+		int n = 1;
+		
+		new NonPrimeFieldElement(p, m, n, -1);
+		new NonPrimeFieldElement(p, m, n, 0);
+		new NonPrimeFieldElement(p, m, n, 1);
+		new NonPrimeFieldElement(p, m, n, 2);
+		new NonPrimeFieldElement(p, m, n, 3);
+		new NonPrimeFieldElement(p, m, n, 4);
+		new NonPrimeFieldElement(p, m, n, 5);
+		new NonPrimeFieldElement(p, m, n, 6);
 	}
 	
 	@Test
-	public void shouldAdd() {
-		FieldElement f0 = new NonPrimeFieldElement(2, 3, -1);
-		FieldElement f1 = new NonPrimeFieldElement(2, 3, 0);
-		FieldElement f2 = new NonPrimeFieldElement(2, 3, 1);
-		FieldElement f3 = new NonPrimeFieldElement(2, 3, 2);
-		FieldElement f4 = new NonPrimeFieldElement(2, 3, 3);
-		FieldElement f5 = new NonPrimeFieldElement(2, 3, 4);
-		FieldElement f6 = new NonPrimeFieldElement(2, 3, 5);
-		FieldElement f7 = new NonPrimeFieldElement(2, 3, 6);
+	public void shouldAdd_2_3_1() {
+		int p = 2;
+		int m = 3;
+		int n = 1;
+		
+		FieldElement f0 = new NonPrimeFieldElement(p, m, n, -1);
+		FieldElement f1 = new NonPrimeFieldElement(p, m, n, 0);
+		FieldElement f2 = new NonPrimeFieldElement(p, m, n, 1);
+		FieldElement f3 = new NonPrimeFieldElement(p, m, n, 2);
+		FieldElement f4 = new NonPrimeFieldElement(p, m, n, 3);
+		FieldElement f5 = new NonPrimeFieldElement(p, m, n, 4);
+		FieldElement f6 = new NonPrimeFieldElement(p, m, n, 5);
+		FieldElement f7 = new NonPrimeFieldElement(p, m, n, 6);
 		
 		assertTrue(f1.add(f1).equals(f0));
 		assertTrue(f1.add(f2).equals(f4));
@@ -50,15 +58,19 @@ public class NonPrimeFieldElementTest {
 	}
 	
 	@Test
-	public void shouldSubtract() {
-		FieldElement f0 = new NonPrimeFieldElement(2, 3, -1);
-		FieldElement f1 = new NonPrimeFieldElement(2, 3, 0);
-		FieldElement f2 = new NonPrimeFieldElement(2, 3, 1);
-		FieldElement f3 = new NonPrimeFieldElement(2, 3, 2);
-		FieldElement f4 = new NonPrimeFieldElement(2, 3, 3);
-		FieldElement f5 = new NonPrimeFieldElement(2, 3, 4);
-		FieldElement f6 = new NonPrimeFieldElement(2, 3, 5);
-		FieldElement f7 = new NonPrimeFieldElement(2, 3, 6);
+	public void shouldSubtract_2_3_1() {
+		int p = 2;
+		int m = 3;
+		int n = 1;
+		
+		FieldElement f0 = new NonPrimeFieldElement(p, m, n, -1);
+		FieldElement f1 = new NonPrimeFieldElement(p, m, n, 0);
+		FieldElement f2 = new NonPrimeFieldElement(p, m, n, 1);
+		FieldElement f3 = new NonPrimeFieldElement(p, m, n, 2);
+		FieldElement f4 = new NonPrimeFieldElement(p, m, n, 3);
+		FieldElement f5 = new NonPrimeFieldElement(p, m, n, 4);
+		FieldElement f6 = new NonPrimeFieldElement(p, m, n, 5);
+		FieldElement f7 = new NonPrimeFieldElement(p, m, n, 6);
 		
 		assertTrue(f4.sub(f1).equals(f2));
 		assertTrue(f4.sub(f2).equals(f1));
@@ -70,15 +82,19 @@ public class NonPrimeFieldElementTest {
 	}
 	
 	@Test
-	public void shouldMultiply() {
-		FieldElement f0 = new NonPrimeFieldElement(2, 3, -1);
-		FieldElement f1 = new NonPrimeFieldElement(2, 3, 0);
-		FieldElement f2 = new NonPrimeFieldElement(2, 3, 1);
-		FieldElement f3 = new NonPrimeFieldElement(2, 3, 2);
-		FieldElement f4 = new NonPrimeFieldElement(2, 3, 3);
-		FieldElement f5 = new NonPrimeFieldElement(2, 3, 4);
-		FieldElement f6 = new NonPrimeFieldElement(2, 3, 5);
-		FieldElement f7 = new NonPrimeFieldElement(2, 3, 6);
+	public void shouldMultiply_2_3_() {
+		int p = 2;
+		int m = 3;
+		int n = 1;
+		
+		FieldElement f0 = new NonPrimeFieldElement(p, m, n, -1);
+		FieldElement f1 = new NonPrimeFieldElement(p, m, n, 0);
+		FieldElement f2 = new NonPrimeFieldElement(p, m, n, 1);
+		FieldElement f3 = new NonPrimeFieldElement(p, m, n, 2);
+		FieldElement f4 = new NonPrimeFieldElement(p, m, n, 3);
+		FieldElement f5 = new NonPrimeFieldElement(p, m, n, 4);
+		FieldElement f6 = new NonPrimeFieldElement(p, m, n, 5);
+		FieldElement f7 = new NonPrimeFieldElement(p, m, n, 6);
 		
 		assertTrue(f7.mul(f0).equals(f0));
 		assertTrue(f7.mul(f1).equals(f7));
@@ -91,13 +107,14 @@ public class NonPrimeFieldElementTest {
 	}
 	
 	@Test
-	public void shouldMultiplyByNumber_2_4() {
+	public void shouldMultiplyByNumber_2_4_1() {
 		int p = 2;
 		int m = 4;
+		int n = 1;
 		
-		FieldElement f0 = new NonPrimeFieldElement(p, m, -1);		
-		FieldElement f3 = new NonPrimeFieldElement(p, m, 2);		
-		FieldElement f10 = new NonPrimeFieldElement(p, m, 9);
+		FieldElement f0 = new NonPrimeFieldElement(p, m, n, -1);		
+		FieldElement f3 = new NonPrimeFieldElement(p, m, n, 2);		
+		FieldElement f10 = new NonPrimeFieldElement(p, m, n, 9);
 		
 		assertTrue(f3.mul(-2).equals(f0));
 		assertTrue(f3.mul(-1).equals(f3));
@@ -115,15 +132,19 @@ public class NonPrimeFieldElementTest {
 	}
 	
 	@Test
-	public void shouldPower_2_3() {
-		FieldElement f0 = new NonPrimeFieldElement(2, 3, -1);
-		FieldElement f1 = new NonPrimeFieldElement(2, 3, 0);
-		FieldElement f2 = new NonPrimeFieldElement(2, 3, 1);
-		FieldElement f3 = new NonPrimeFieldElement(2, 3, 2);
-		FieldElement f4 = new NonPrimeFieldElement(2, 3, 3);
-		FieldElement f5 = new NonPrimeFieldElement(2, 3, 4);
-		FieldElement f6 = new NonPrimeFieldElement(2, 3, 5);
-		FieldElement f7 = new NonPrimeFieldElement(2, 3, 6);
+	public void shouldPower_2_3_1() {
+		int p = 2;
+		int m = 3;
+		int n = 1;
+		
+		FieldElement f0 = new NonPrimeFieldElement(p, m, n, -1);
+		FieldElement f1 = new NonPrimeFieldElement(p, m, n, 0);
+		FieldElement f2 = new NonPrimeFieldElement(p, m, n, 1);
+		FieldElement f3 = new NonPrimeFieldElement(p, m, n, 2);
+		FieldElement f4 = new NonPrimeFieldElement(p, m, n, 3);
+		FieldElement f5 = new NonPrimeFieldElement(p, m, n, 4);
+		FieldElement f6 = new NonPrimeFieldElement(p, m, n, 5);
+		FieldElement f7 = new NonPrimeFieldElement(p, m, n, 6);
 		
 		assertTrue(f3.pow(BigInteger.valueOf(2)).equals(f5));
 		assertTrue(f3.pow(BigInteger.valueOf(3)).equals(f7));
@@ -135,26 +156,27 @@ public class NonPrimeFieldElementTest {
 	}
 	
 	@Test
-	public void shouldPower_2_4() {
+	public void shouldPower_2_4_1() {
 		int p = 2;
 		int m = 4;
+		int n = 1;
 		
-		FieldElement f0 = new NonPrimeFieldElement(p, m, -1);
-		FieldElement f1 = new NonPrimeFieldElement(p, m, 0);
-		FieldElement f2 = new NonPrimeFieldElement(p, m, 1);
-		FieldElement f3 = new NonPrimeFieldElement(p, m, 2);
-		FieldElement f4 = new NonPrimeFieldElement(p, m, 3);
-		FieldElement f5 = new NonPrimeFieldElement(p, m, 4);
-		FieldElement f6 = new NonPrimeFieldElement(p, m, 5);
-		FieldElement f7 = new NonPrimeFieldElement(p, m, 6);
-		FieldElement f8 = new NonPrimeFieldElement(p, m, 7);
-		FieldElement f9 = new NonPrimeFieldElement(p, m, 8);
-		FieldElement f10 = new NonPrimeFieldElement(p, m, 9);
-		FieldElement f11 = new NonPrimeFieldElement(p, m, 10);
-		FieldElement f12 = new NonPrimeFieldElement(p, m, 11);
-		FieldElement f13 = new NonPrimeFieldElement(p, m, 12);
-		FieldElement f14 = new NonPrimeFieldElement(p, m, 13);
-		FieldElement f15 = new NonPrimeFieldElement(p, m, 14);
+		FieldElement f0 = new NonPrimeFieldElement(p, m, n, -1);
+		FieldElement f1 = new NonPrimeFieldElement(p, m, n, 0);
+		FieldElement f2 = new NonPrimeFieldElement(p, m, n, 1);
+		FieldElement f3 = new NonPrimeFieldElement(p, m, n, 2);
+		FieldElement f4 = new NonPrimeFieldElement(p, m, n, 3);
+		FieldElement f5 = new NonPrimeFieldElement(p, m, n, 4);
+		FieldElement f6 = new NonPrimeFieldElement(p, m, n, 5);
+		FieldElement f7 = new NonPrimeFieldElement(p, m, n, 6);
+		FieldElement f8 = new NonPrimeFieldElement(p, m, n, 7);
+		FieldElement f9 = new NonPrimeFieldElement(p, m, n, 8);
+		FieldElement f10 = new NonPrimeFieldElement(p, m, n, 9);
+		FieldElement f11 = new NonPrimeFieldElement(p, m, n, 10);
+		FieldElement f12 = new NonPrimeFieldElement(p, m, n, 11);
+		FieldElement f13 = new NonPrimeFieldElement(p, m, n, 12);
+		FieldElement f14 = new NonPrimeFieldElement(p, m, n, 13);
+		FieldElement f15 = new NonPrimeFieldElement(p, m, n, 14);
 		
 		assertTrue(f3.pow(BigInteger.valueOf(2)).equals(f5));
 		assertTrue(f3.pow(BigInteger.valueOf(3)).equals(f7));
@@ -174,15 +196,19 @@ public class NonPrimeFieldElementTest {
 	}
 	
 	@Test
-	public void shouldInverse() {
-		FieldElement f0 = new NonPrimeFieldElement(2, 3, -1);
-		FieldElement f1 = new NonPrimeFieldElement(2, 3, 0);
-		FieldElement f2 = new NonPrimeFieldElement(2, 3, 1);
-		FieldElement f3 = new NonPrimeFieldElement(2, 3, 2);
-		FieldElement f4 = new NonPrimeFieldElement(2, 3, 3);
-		FieldElement f5 = new NonPrimeFieldElement(2, 3, 4);
-		FieldElement f6 = new NonPrimeFieldElement(2, 3, 5);
-		FieldElement f7 = new NonPrimeFieldElement(2, 3, 6);
+	public void shouldInverse_2_3_1() {
+		int p = 2;
+		int m = 3;
+		int n = 1;
+		
+		FieldElement f0 = new NonPrimeFieldElement(p, m, n, -1);
+		FieldElement f1 = new NonPrimeFieldElement(p, m, n, 0);
+		FieldElement f2 = new NonPrimeFieldElement(p, m, n, 1);
+		FieldElement f3 = new NonPrimeFieldElement(p, m, n, 2);
+		FieldElement f4 = new NonPrimeFieldElement(p, m, n, 3);
+		FieldElement f5 = new NonPrimeFieldElement(p, m, n, 4);
+		FieldElement f6 = new NonPrimeFieldElement(p, m, n, 5);
+		FieldElement f7 = new NonPrimeFieldElement(p, m, n, 6);
 		
 		assertTrue(f1.inv().equals(f1));
 		assertTrue(f2.inv().equals(f7));

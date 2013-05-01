@@ -44,6 +44,19 @@ public class NonPrimeFieldElement extends FieldElement {
 		addElement(fieldElements, 13, "1011");
 		addElement(fieldElements, 14, "1001");
 		allElements.put(powerOfPrime, fieldElements);
+		
+		powerOfPrime = BigInteger.valueOf(3).pow(2);
+		fieldElements = new HashMap<>();
+		addElement(fieldElements, -1, "00");
+		addElement(fieldElements, 0, "10");
+		addElement(fieldElements, 1, "01");
+		addElement(fieldElements, 2, "12");
+		addElement(fieldElements, 3, "22");
+		addElement(fieldElements, 4, "20");
+		addElement(fieldElements, 5, "02");
+		addElement(fieldElements, 6, "21");
+		addElement(fieldElements, 7, "11");
+		allElements.put(powerOfPrime, fieldElements);
 	}
 	
 	private static void addElement(Map<BigInteger, List<BigInteger>> fieldElements, int powerOfPrime, String base) {
@@ -55,50 +68,52 @@ public class NonPrimeFieldElement extends FieldElement {
 	}
 	
 	private List<BigInteger> getBase(BigInteger power) {
-		return allElements.get(p.pow(m.intValue())).get(power);
+		return allElements.get(p.pow(m.multiply(n).intValue())).get(power);
 	}
 	
 	private BigInteger getPower(List<BigInteger> base) {
-		Map<BigInteger, List<BigInteger>> fieldElements = allElements.get(p.pow(m.intValue()));
+		Map<BigInteger, List<BigInteger>> fieldElements = allElements.get(p.pow(m.multiply(n).intValue()));
 		for (Entry<BigInteger, List<BigInteger>> entry: fieldElements.entrySet()) {
 			if (entry.getValue().equals(base)) {
 				return entry.getKey();
 			}
 		}
-		throw new ArithmeticException(String.format("No power found for base %s, p: %s, m: %s", base, p, m));
+		throw new ArithmeticException(String.format("No power found for base %s, p: %s, m: %s, n: %s", base, p, m, n));
 	}
 
 	private BigInteger p;
 	private BigInteger m;
+	private BigInteger n;
 
 	private BigInteger power;
 	private List<BigInteger> base;
 
-	public NonPrimeFieldElement(BigInteger p, BigInteger m, BigInteger power) {
-		this(p, m);
+	public NonPrimeFieldElement(BigInteger p, BigInteger m, BigInteger n, BigInteger power) {
+		this(p, m, n);
 
 		this.power = power;
 		this.base = getBase(power);
 	}
 
-	public NonPrimeFieldElement(BigInteger p, BigInteger m, List<BigInteger> base) {
-		this(p, m);
+	public NonPrimeFieldElement(BigInteger p, BigInteger m, BigInteger n, List<BigInteger> base) {
+		this(p, m, n);
 
 		this.power = getPower(base);
 		this.base = base;
 	}
 
-	private NonPrimeFieldElement(BigInteger p, BigInteger m) {
+	private NonPrimeFieldElement(BigInteger p, BigInteger m, BigInteger N) {
 		this.p = p;
 		this.m = m;
+		this.n = N;
 	}
 
-	public NonPrimeFieldElement(int p, int m, int power) {
-		this(BigInteger.valueOf(p), BigInteger.valueOf(m), BigInteger.valueOf(power));
+	public NonPrimeFieldElement(int p, int m, int n, int power) {
+		this(BigInteger.valueOf(p), BigInteger.valueOf(m), BigInteger.valueOf(n), BigInteger.valueOf(power));
 	}
 	
-	public NonPrimeFieldElement(BigInteger p, BigInteger m, int power) {
-		this(p, m, BigInteger.valueOf(power));
+	public NonPrimeFieldElement(BigInteger p, BigInteger m, BigInteger n, int power) {
+		this(p, m, n, BigInteger.valueOf(power));
 	}
 
 	@Override
@@ -113,7 +128,7 @@ public class NonPrimeFieldElement extends FieldElement {
 			newBase.set(i, base.get(i).add(b.base.get(i)).mod(p));
 		}
 		
-		return new NonPrimeFieldElement(p, m, newBase);
+		return new NonPrimeFieldElement(p, m, n, newBase);
 	}
 
 	@Override
@@ -121,10 +136,10 @@ public class NonPrimeFieldElement extends FieldElement {
 		BigInteger b = BigInteger.valueOf(a).mod(p);
 		List<BigInteger> newBase = new ArrayList<>();
 		newBase.add(b);
-		for (int i = 1; i < m.intValue(); i ++) {
+		for (int i = 1; i < m.multiply(n).intValue(); i ++) {
 			newBase.add(BigInteger.ZERO);
 		}
-		return this.add(new NonPrimeFieldElement(p, m, newBase));
+		return this.add(new NonPrimeFieldElement(p, m, n, newBase));
 	}
 
 	@Override
@@ -139,7 +154,7 @@ public class NonPrimeFieldElement extends FieldElement {
 			newBase.set(i, base.get(i).subtract(b.base.get(i)).mod(p));
 		}
 		
-		return new NonPrimeFieldElement(p, m, newBase);
+		return new NonPrimeFieldElement(p, m, n, newBase);
 	}
 
 	@Override
@@ -154,11 +169,11 @@ public class NonPrimeFieldElement extends FieldElement {
 		}
 		NonPrimeFieldElement b = (NonPrimeFieldElement) a;
 		
-		if (b.isZero()) {
-			return b.getZero();
+		if (isZero() || b.isZero()) {
+			return getZero();
 		}
 		
-		return new NonPrimeFieldElement(p, m, power.add(b.power).mod(p.pow(m.intValue()).subtract(BigInteger.ONE)));
+		return new NonPrimeFieldElement(p, m, n, power.add(b.power).mod(p.pow(m.multiply(n).intValue()).subtract(BigInteger.ONE)));
 	}
 
 	@Override
@@ -166,15 +181,15 @@ public class NonPrimeFieldElement extends FieldElement {
 		BigInteger b = BigInteger.valueOf(a).mod(p);
 		List<BigInteger> newBase = new ArrayList<>();
 		newBase.add(b);
-		for (int i = 1; i < m.intValue(); i ++) {
+		for (int i = 1; i < m.multiply(n).intValue(); i ++) {
 			newBase.add(BigInteger.ZERO);
 		}
-		return this.mul(new NonPrimeFieldElement(p, m, newBase));
+		return this.mul(new NonPrimeFieldElement(p, m, n, newBase));
 	}
 
 	@Override
 	public FieldElement pow(BigInteger i) {
-		FieldElement result = new NonPrimeFieldElement(p, m, power);
+		FieldElement result = new NonPrimeFieldElement(p, m, n, power);
     	while (i.compareTo(BigInteger.ONE) > 0) {
     		result = result.mul(this);
     		i = i.subtract(BigInteger.ONE);
@@ -188,12 +203,12 @@ public class NonPrimeFieldElement extends FieldElement {
 			return getOne();
 		}
 		
-		return new NonPrimeFieldElement(p, m, p.pow(m.intValue()).subtract(power).subtract(BigInteger.ONE));
+		return new NonPrimeFieldElement(p, m, n, p.pow(m.multiply(n).intValue()).subtract(power).subtract(BigInteger.ONE));
 	}
 
 	@Override
 	public FieldElement getZero() {
-		return new NonPrimeFieldElement(p, m, BigInteger.valueOf(-1));
+		return new NonPrimeFieldElement(p, m, n, BigInteger.valueOf(-1));
 	}
 
 	@Override
@@ -203,7 +218,7 @@ public class NonPrimeFieldElement extends FieldElement {
 
 	@Override
 	public FieldElement getOne() {
-		return new NonPrimeFieldElement(p, m, BigInteger.ZERO);
+		return new NonPrimeFieldElement(p, m, n, BigInteger.ZERO);
 	}
 
 	@Override
@@ -212,7 +227,7 @@ public class NonPrimeFieldElement extends FieldElement {
 	}
 	
 	public FieldElement getPrimitiveElement() {
-		return new NonPrimeFieldElement(p, m, BigInteger.ONE);
+		return new NonPrimeFieldElement(p, m, n, BigInteger.ONE);
 	}
 
 	@Override
@@ -226,22 +241,30 @@ public class NonPrimeFieldElement extends FieldElement {
         }
 
         NonPrimeFieldElement b = (NonPrimeFieldElement) a;
-        return this.p.equals(b.p) && this.m.equals(b.m) && this.power.equals(b.power);
+        return p.equals(b.p) && m.multiply(n).equals(b.m.multiply(b.n)) && this.power.equals(b.power);
     }
 
    public int hashCode() {
     	return new ArrayList<BigInteger>() {{
     		add(p);
-    		add(m);
+    		add(m.multiply(n));
     		add(power);
     	}}.hashCode();
     }
    
-   public String toString() {
+   private String toBaseString() {
 	   StringBuilder sb = new StringBuilder();
 	   for (int i = 0; i < base.size(); i++) {
 		   sb.append(base.get(i));
 	   }
 	   return sb.toString();
+   }
+   
+   private String toPowerString() {
+	   return String.valueOf(power);
+   }
+   
+   public String toString() {
+	   return toPowerString();
    }
 }

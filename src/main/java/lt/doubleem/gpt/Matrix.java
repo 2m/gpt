@@ -42,9 +42,54 @@ public class Matrix<T extends FieldElement> {
 			set(rowTo, i, (T) get(rowFrom, i).mul(e).add(get(rowTo, i)));
 		}
 	}
+	
+	public void swapRows(int rowNum1, int rowNum2) {
+		for (int i = 0; i < cols; i++) {
+			T temp = get(rowNum1, i);
+			set(rowNum1, i, get(rowNum2, i));
+			set(rowNum2, i, temp);
+		}		
+	}
+	
+	public void swapColumns(int colNum1, int colNum2) {
+		for (int i = 0; i < rows; i++) {
+			T temp = get(i, colNum1);
+			set(i, colNum1, get(i, colNum2));
+			set(i, colNum2, temp);
+		}		
+	}
 
 	public void standardize() {
 		for (int i = 0; i < rows; i++) {
+			if (get(i, i).isZero()) {
+				// element in diagonal position is zero
+				// no inverse element exists for zero
+				// try to find a row below which has not a zero
+				boolean swapped = false;
+				for (int j = i + 1; j < rows; j++) {
+					if (!get(j, i).isZero()) {
+						swapRows(i, j);
+						swapped = true;
+						break;
+					}
+				}
+				if (!swapped) {
+					// no rows below has a not zero element
+					// try to find a column to the right,
+					// which has not a zero
+					for (int j = i + 1; j < cols; j++) {
+						if (!get(i, j).isZero()) {
+							swapColumns(i, j);
+							swapped = true;
+							break;
+						}
+					}
+					if (!swapped) {
+						throw new ArithmeticException("Element is zero, and all below are zero.");
+					}
+				}
+			}
+			
 			T multi = (T) get(i, i).inv();
 			multiplyRow(i, multi);
 			
@@ -77,13 +122,19 @@ public class Matrix<T extends FieldElement> {
 	}
 	
 	public Matrix<T> inv() {
-		Matrix<T> result = new Matrix<>(rows, cols * 2);
+		Matrix<T> result = appendIndentity();
+		result.standardize();
+		return result.getMatrix(rows, cols, 0, cols);
+	}
+	
+	public Matrix<T> appendIndentity() {
+		Matrix<T> result = new Matrix<>(rows, cols + rows);
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				result.set(i, j, get(i, j));
 			}
 			// set identity matrix
-			for (int j = 0; j < cols; j++) {
+			for (int j = 0; j < rows; j++) {
 				if (i == j) {
 					result.set(i, j + cols, (T) get(0, 0).getOne());
 				}
@@ -92,8 +143,7 @@ public class Matrix<T extends FieldElement> {
 				}
 			}
 		}
-		result.standardize();
-		return result.getMatrix(rows, cols, 0, cols);
+		return result;
 	}
 	
 	public Matrix<T> mul(Matrix<T> b) {
@@ -122,6 +172,22 @@ public class Matrix<T extends FieldElement> {
 			}
 		}
 		return result;
+	}
+	
+	public Matrix<T> dual() {
+		Matrix<T> result = getMatrix(rows, cols, 0, 0);
+		result.standardize();
+		
+		result = result.getMatrix(rows, (int)Math.floor((double)cols / 2), 0, (int)Math.ceil((double)cols / 2));
+		result = result.transpose();
+		
+		for (int row = 0; row < result.rows; row++) {
+			for (int col = 0; col < result.cols; col++) {
+				result.set(row, col, (T) result.get(row, col).mul(-1));
+			}
+		}
+		
+		return result.appendIndentity();
 	}
 	
 	public String toString() {
