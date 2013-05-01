@@ -1,5 +1,6 @@
 package lt.doubleem.gpt;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -20,11 +21,12 @@ public class MatrixTest {
 		m.set(1, 1, new FiniteFieldElement(11, -1));
 		m.set(1, 2, new FiniteFieldElement(11, 1));
 		
-		m.standardize();
-		List<FiniteFieldElement> result = m.getColumn(2);
-		assertTrue(result.size() == 2);
-		assertTrue(result.contains(new FiniteFieldElement(11, 2)));
-		assertTrue(result.contains(new FiniteFieldElement(11, 3)));
+		Matrix<FiniteFieldElement> m1 = new Matrix<>(1, 2);
+		
+		m1.set(0, 0, new FiniteFieldElement(11, 2));
+		m1.set(0, 1, new FiniteFieldElement(11, 3));
+		
+		assertTrue(m.standardize().getColumn(2).transpose().equals(m1));
 	}
 	
 	@Test
@@ -46,12 +48,13 @@ public class MatrixTest {
 		m.set(2, 2, new FiniteFieldElement(11, 1));
 		m.set(2, 3, new FiniteFieldElement(11, 4));
 		
-		m.standardize();
-		List<FiniteFieldElement> result = m.getColumn(3);
-		assertTrue(result.size() == 3);
-		assertTrue(result.contains(new FiniteFieldElement(11, 2)));
-		assertTrue(result.contains(new FiniteFieldElement(11, 5)));
-		assertTrue(result.contains(new FiniteFieldElement(11, -3)));
+		Matrix<FiniteFieldElement> m1 = new Matrix<>(1, 3);
+		
+		m1.set(0, 0, new FiniteFieldElement(11, 2));
+		m1.set(0, 1, new FiniteFieldElement(11, 5));
+		m1.set(0, 2, new FiniteFieldElement(11, -3));
+		
+		assertTrue(m.standardize().getColumn(3).transpose().equals(m1));
 	}
 	
 	@Test
@@ -163,6 +166,85 @@ public class MatrixTest {
 	}
 	
 	@Test
+	public void shouldMultiplyByNumber() {
+		int q = 11;
+		
+		Matrix<FiniteFieldElement> m1 = new Matrix<>(3, 3);		
+		m1.set(0, 0, new FiniteFieldElement(q, 1));
+		m1.set(0, 1, new FiniteFieldElement(q, 3));
+		m1.set(0, 2, new FiniteFieldElement(q, 3));
+		
+		m1.set(1, 0, new FiniteFieldElement(q, 1));
+		m1.set(1, 1, new FiniteFieldElement(q, 4));
+		m1.set(1, 2, new FiniteFieldElement(q, 3));
+		
+		m1.set(2, 0, new FiniteFieldElement(q, 1));
+		m1.set(2, 1, new FiniteFieldElement(q, 3));
+		m1.set(2, 2, new FiniteFieldElement(q, 4));
+		
+		Matrix<FiniteFieldElement> m2 = new Matrix<>(3, 3);		
+		m2.set(0, 0, new FiniteFieldElement(q, 2));
+		m2.set(0, 1, new FiniteFieldElement(q, 6));
+		m2.set(0, 2, new FiniteFieldElement(q, 6));
+		
+		m2.set(1, 0, new FiniteFieldElement(q, 2));
+		m2.set(1, 1, new FiniteFieldElement(q, 8));
+		m2.set(1, 2, new FiniteFieldElement(q, 6));
+		
+		m2.set(2, 0, new FiniteFieldElement(q, 2));
+		m2.set(2, 1, new FiniteFieldElement(q, 6));
+		m2.set(2, 2, new FiniteFieldElement(q, 8));
+		
+		assertTrue(m2.equals(m1.mul(2)));
+	}
+	
+	@Test
+	public void shouldAddTwoMatrices() {
+		int q = 11;
+		
+		Matrix<FiniteFieldElement> m1 = new Matrix<>(3, 3);		
+		m1.set(0, 0, new FiniteFieldElement(q, 1));
+		m1.set(0, 1, new FiniteFieldElement(q, 3));
+		m1.set(0, 2, new FiniteFieldElement(q, 3));
+		
+		m1.set(1, 0, new FiniteFieldElement(q, 1));
+		m1.set(1, 1, new FiniteFieldElement(q, 4));
+		m1.set(1, 2, new FiniteFieldElement(q, 3));
+		
+		m1.set(2, 0, new FiniteFieldElement(q, 1));
+		m1.set(2, 1, new FiniteFieldElement(q, 3));
+		m1.set(2, 2, new FiniteFieldElement(q, 4));
+		
+		Matrix<FiniteFieldElement> m2 = new Matrix<>(3, 3);		
+		m2.set(0, 0, new FiniteFieldElement(q, 2));
+		m2.set(0, 1, new FiniteFieldElement(q, 6));
+		m2.set(0, 2, new FiniteFieldElement(q, 6));
+		
+		m2.set(1, 0, new FiniteFieldElement(q, 2));
+		m2.set(1, 1, new FiniteFieldElement(q, 8));
+		m2.set(1, 2, new FiniteFieldElement(q, 6));
+		
+		m2.set(2, 0, new FiniteFieldElement(q, 2));
+		m2.set(2, 1, new FiniteFieldElement(q, 6));
+		m2.set(2, 2, new FiniteFieldElement(q, 8));
+		
+		Matrix<FiniteFieldElement> m3 = new Matrix<>(3, 3);		
+		m3.set(0, 0, new FiniteFieldElement(q, 3));
+		m3.set(0, 1, new FiniteFieldElement(q, 9));
+		m3.set(0, 2, new FiniteFieldElement(q, 9));
+		
+		m3.set(1, 0, new FiniteFieldElement(q, 3));
+		m3.set(1, 1, new FiniteFieldElement(q, 1));
+		m3.set(1, 2, new FiniteFieldElement(q, 9));
+		
+		m3.set(2, 0, new FiniteFieldElement(q, 3));
+		m3.set(2, 1, new FiniteFieldElement(q, 9));
+		m3.set(2, 2, new FiniteFieldElement(q, 1));
+		
+		assertTrue(m3.equals(m1.add(m2)));
+	}
+	
+	@Test
 	public void shouldTranspose() {
 		Matrix<FiniteFieldElement> m1 = new Matrix<>(3, 3);		
 		m1.set(0, 0, new FiniteFieldElement(11, 1));
@@ -249,6 +331,8 @@ public class MatrixTest {
 		m2.set(1, 3, new FiniteFieldElement(q, 1));
 		
 		assertTrue(m1.dual().equals(m2));
+		assertTrue(m1.dual().dual().standardize().equals(m1.standardize()));
+		assertTrue(m1.mul(m1.dual().transpose()).isZero());
 	}
 	
 	@Test
@@ -288,6 +372,32 @@ public class MatrixTest {
 		m2.set(1, 4, new FiniteFieldElement(q, 1));
 		
 		assertTrue(m1.dual().equals(m2));
+		assertTrue(m1.dual().dual().standardize().equals(m1.standardize()));
+		
+		// when standardizing m1, we need to swap some columns,
+		// therefore after standardization we get generator matrix of equivalent code
+		assertTrue(m1.standardize().mul(m1.dual().transpose()).isZero());
+		assertFalse(m1.mul(m1.dual().transpose()).isZero());
+	}
+	
+	@Test
+	public void shouldReturnSelfDual_rows_2_cols_4_q_5() {
+		int q = 2;
+		
+		Matrix<FiniteFieldElement> m1 = new Matrix<>(2, 4);
+		m1.set(0, 0, new FiniteFieldElement(q, 1));
+		m1.set(0, 1, new FiniteFieldElement(q, 0));
+		m1.set(0, 2, new FiniteFieldElement(q, 1));
+		m1.set(0, 3, new FiniteFieldElement(q, 0));
+		
+		m1.set(1, 0, new FiniteFieldElement(q, 0));
+		m1.set(1, 1, new FiniteFieldElement(q, 1));
+		m1.set(1, 2, new FiniteFieldElement(q, 0));
+		m1.set(1, 3, new FiniteFieldElement(q, 1));
+		
+		assertTrue(m1.mul(m1.transpose()).isZero());
+		assertTrue(m1.dual().equals(m1));		
+		assertTrue(m1.mul(m1.dual().transpose()).isZero());		
 	}
 	
 	@Test
@@ -332,8 +442,7 @@ public class MatrixTest {
 		m2.set(2, 3, new FiniteFieldElement(q, 0));
 		m2.set(2, 4, new FiniteFieldElement(q, 4));
 		
-		m1.standardize();
-		assertTrue(m1.equals(m2));
+		assertTrue(m1.standardize().equals(m2));
 	}
 	
 	@Test
@@ -380,7 +489,6 @@ public class MatrixTest {
 		m2.set(2, 3, new NonPrimeFieldElement(p, q, n, 3));
 		m2.set(2, 4, new NonPrimeFieldElement(p, q, n, 3));
 		
-		m1.standardize();
-		assertTrue(m1.equals(m2));
+		assertTrue(m1.standardize().equals(m2));
 	}
 }

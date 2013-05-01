@@ -59,16 +59,17 @@ public class Matrix<T extends FieldElement> {
 		}		
 	}
 
-	public void standardize() {
+	public Matrix<T> standardize() {
+		Matrix<T> result = getMatrix(rows, cols, 0, 0);
 		for (int i = 0; i < rows; i++) {
-			if (get(i, i).isZero()) {
+			if (result.get(i, i).isZero()) {
 				// element in diagonal position is zero
 				// no inverse element exists for zero
 				// try to find a row below which has not a zero
 				boolean swapped = false;
 				for (int j = i + 1; j < rows; j++) {
-					if (!get(j, i).isZero()) {
-						swapRows(i, j);
+					if (!result.get(j, i).isZero()) {
+						result.swapRows(i, j);
 						swapped = true;
 						break;
 					}
@@ -78,8 +79,8 @@ public class Matrix<T extends FieldElement> {
 					// try to find a column to the right,
 					// which has not a zero
 					for (int j = i + 1; j < cols; j++) {
-						if (!get(i, j).isZero()) {
-							swapColumns(i, j);
+						if (!result.get(i, j).isZero()) {
+							result.swapColumns(i, j);
 							swapped = true;
 							break;
 						}
@@ -90,25 +91,22 @@ public class Matrix<T extends FieldElement> {
 				}
 			}
 			
-			T multi = (T) get(i, i).inv();
-			multiplyRow(i, multi);
+			T multi = (T) result.get(i, i).inv();
+			result.multiplyRow(i, multi);
 			
 			for (int j = 0; j < rows; j++) {
 				if (j == i) {
 					continue;
 				}
-				T multi2 = (T) get(j, i).mul(-1);
-				multiplyRow(i, j, multi2);
+				T multi2 = (T) result.get(j, i).mul(-1);
+				result.multiplyRow(i, j, multi2);
 			}
 		}
+		return result;
 	}
 	
-	public List<T> getColumn(int col) {
-		List<T> column = new ArrayList<>();
-		for (int i = 0; i < rows; i++) {
-			column.add(get(i, col));
-		}
-		return column;
+	public Matrix<T> getColumn(int col) {
+		return getMatrix(rows, 1, 0, col);
 	}
 	
 	public Matrix<T> getMatrix(int rowCount, int colCount, int rowOffset, int colOffset) {
@@ -122,8 +120,12 @@ public class Matrix<T extends FieldElement> {
 	}
 	
 	public Matrix<T> inv() {
+		if (rows != cols) {
+			throw new ArithmeticException(String.format("Matrix non square. Unable to find inverse."));
+		}
+		
 		Matrix<T> result = appendIndentity();
-		result.standardize();
+		result = result.standardize();
 		return result.getMatrix(rows, cols, 0, cols);
 	}
 	
@@ -146,6 +148,17 @@ public class Matrix<T extends FieldElement> {
 		return result;
 	}
 	
+	public Matrix<T> appendColumn(Matrix<T> column) {
+		Matrix<T> result = new Matrix<>(rows, cols + 1);
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				result.set(i, j, get(i, j));
+			}
+			result.set(i, cols, column.get(0, i));
+		}
+		return result;
+	}
+	
 	public Matrix<T> mul(Matrix<T> b) {
 		if (cols != b.rows) {
 			throw new ArithmeticException(String.format("Unable to multiply. %s and %s should be equal", cols, b.rows));
@@ -164,6 +177,30 @@ public class Matrix<T extends FieldElement> {
 		return result;
 	}
 	
+	public Matrix<T> mul(Integer b) {
+		Matrix<T> result = getMatrix(rows, cols, 0, 0);
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
+				result.set(row, col, (T) result.get(row, col).mul(b));
+			}
+		}
+		return result;
+	}
+	
+	public Matrix<T> add(Matrix<T> b) {
+		if (rows != b.rows || cols != b.cols) {
+			throw new ArithmeticException(String.format("Unable to add."));
+		}
+		
+		Matrix<T> result = getMatrix(rows, cols, 0, 0);
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
+				result.set(row, col, (T) result.get(row, col).add(b.get(row, col)));
+			}
+		}
+		return result;
+	}
+	
 	public Matrix<T> transpose() {
 		Matrix<T> result = new Matrix<>(cols, rows);
 		for (int row = 0; row < rows; row++) {
@@ -176,9 +213,9 @@ public class Matrix<T extends FieldElement> {
 	
 	public Matrix<T> dual() {
 		Matrix<T> result = getMatrix(rows, cols, 0, 0);
-		result.standardize();
+		result = result.standardize();
 		
-		result = result.getMatrix(rows, (int)Math.floor((double)cols / 2), 0, (int)Math.ceil((double)cols / 2));
+		result = result.getMatrix(rows, cols - rows, 0, rows);
 		result = result.transpose();
 		
 		for (int row = 0; row < result.rows; row++) {
@@ -188,6 +225,25 @@ public class Matrix<T extends FieldElement> {
 		}
 		
 		return result.appendIndentity();
+	}
+	
+	public boolean isZero() {
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (!get(i, j).isZero()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public int getRows() {
+		return rows;
+	}
+	
+	public int getCols() {
+		return cols;
 	}
 	
 	public String toString() {

@@ -101,6 +101,19 @@ public class NonPrimeFieldElement extends FieldElement {
 		this.power = getPower(base);
 		this.base = base;
 	}
+	
+	public NonPrimeFieldElement(BigInteger p, BigInteger m, BigInteger n, String baseElement) {
+		this(p, m, n);
+
+		BigInteger b = new BigInteger(baseElement).mod(p);
+		List<BigInteger> base = new ArrayList<>();
+		base.add(b);
+		for (int i = 1; i < m.multiply(n).intValue(); i ++) {
+			base.add(BigInteger.ZERO);
+		}
+		
+		this.power = getPower(base);
+	}
 
 	private NonPrimeFieldElement(BigInteger p, BigInteger m, BigInteger N) {
 		this.p = p;
@@ -177,14 +190,8 @@ public class NonPrimeFieldElement extends FieldElement {
 	}
 
 	@Override
-	public FieldElement mul(Integer a) {
-		BigInteger b = BigInteger.valueOf(a).mod(p);
-		List<BigInteger> newBase = new ArrayList<>();
-		newBase.add(b);
-		for (int i = 1; i < m.multiply(n).intValue(); i ++) {
-			newBase.add(BigInteger.ZERO);
-		}
-		return this.mul(new NonPrimeFieldElement(p, m, n, newBase));
+	public FieldElement mul(Integer a) {		
+		return this.mul(new NonPrimeFieldElement(p, m, n, a.toString()));
 	}
 
 	@Override

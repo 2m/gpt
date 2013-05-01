@@ -77,14 +77,14 @@ public class MrdDecodeTest {
 		}
 		
 		System.out.println(zLinearSystem);		
-		zLinearSystem.standardize();
+		zLinearSystem = zLinearSystem.standardize();
 		System.out.println(zLinearSystem);
 		
-		List<NonPrimeFieldElement> z = zLinearSystem.getColumn(mi);
+		Matrix<NonPrimeFieldElement> z = zLinearSystem.getColumn(mi).transpose();
 		Matrix<NonPrimeFieldElement> zMatrix = new Matrix<>(mi, d - 2 + 1);
 		for (int row = 0; row < mi; row++) {
 			for (int col = 0; col < d - 2 + 1; col++) {
-				zMatrix.set(row, col, (NonPrimeFieldElement) z.get(row).pow(p.pow(m.intValue()).pow(col)));
+				zMatrix.set(row, col, (NonPrimeFieldElement) z.get(0, row).pow(p.pow(m.intValue()).pow(col)));
 			}
 		}
 		System.out.println(zMatrix);
