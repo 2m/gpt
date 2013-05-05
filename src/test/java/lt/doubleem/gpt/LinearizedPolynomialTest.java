@@ -1,9 +1,12 @@
 package lt.doubleem.gpt;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -65,8 +68,12 @@ public class LinearizedPolynomialTest {
 	@Test
 	public void shouldReturnRoots() {
 		BigInteger powerOfPrime = BigInteger.valueOf(2).pow(1);
-		LinearizedPolynomial<FiniteFieldElement> f1 = new LinearizedPolynomial<>(powerOfPrime, new FiniteFieldElement(powerOfPrime), "231");
-		System.out.println(f1.getRoots());
+		LinearizedPolynomial<FiniteFieldElement> f1 = new LinearizedPolynomial<>(powerOfPrime, new FiniteFieldElement(powerOfPrime), "011");
+		
+		List<FiniteFieldElement> roots = new ArrayList<>();
+		roots.add(new FiniteFieldElement(powerOfPrime, 1));
+		
+		assertTrue(f1.getRoots().equals(roots));
 	}
 	
 }
