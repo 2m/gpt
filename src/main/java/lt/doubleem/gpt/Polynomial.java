@@ -16,7 +16,7 @@ public class Polynomial<T extends FieldElement> {
      * coefficient at index 1 is coefficent at x to the power of 1.
      * and so on.
      */
-    protected ArrayList<T> p;
+    protected ArrayList<T> p; // TODO: refactor to List interface
 
     /**
      * Constructor for empty polynomial.
@@ -61,7 +61,7 @@ public class Polynomial<T extends FieldElement> {
      * Degree of empty polynomial is -1.
      */
     public int deg() {
-        return p.size() - 1;
+        return trim().p.size() - 1;
     }
 
     /**
@@ -315,8 +315,8 @@ public class Polynomial<T extends FieldElement> {
     public Polynomial<T> trim() {
     	Polynomial<T> result = this.clone();
     	
-        int i = result.deg();
-        while (i > 0 && result.getCoef(i).isZero()) {
+        int i = result.p.size() - 1;
+        while (i >= 0 && result.p.get(i).isZero()) {
             result.p.remove(i);
             i--;
         }

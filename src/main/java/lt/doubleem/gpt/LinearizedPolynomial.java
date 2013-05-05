@@ -11,6 +11,11 @@ public class LinearizedPolynomial<T extends FieldElement> extends Polynomial<T> 
 		this.powerOfPrime = powerOfPrime;
 	}
 	
+	public LinearizedPolynomial(BigInteger powerOfPrime, ArrayList<T> p) {
+		super(p);
+		this.powerOfPrime = powerOfPrime;
+	}
+	
 	public LinearizedPolynomial(BigInteger powerOfPrime, Polynomial<T> polynomial) {
 		this.powerOfPrime = powerOfPrime;
 		this.p = polynomial.p;
@@ -80,6 +85,8 @@ public class LinearizedPolynomial<T extends FieldElement> extends Polynomial<T> 
 	@SuppressWarnings("unchecked")
 	public ArrayList<LinearizedPolynomial<T>> divisionWithRemainder(LinearizedPolynomial<T> g) {
 
+		g = g.trim();
+		
         // check for division by zero
         if (g.isZero()) {
             throw(new ArithmeticException("/ by zero"));
