@@ -150,6 +150,17 @@ public class NonPrimeFieldElementTest {
 		FieldElement f6 = new NonPrimeFieldElement(p, m, n, 5);
 		FieldElement f7 = new NonPrimeFieldElement(p, m, n, 6);
 		
+		assertTrue(f3.pow(BigInteger.valueOf(-9)).equals(f1));
+		assertTrue(f3.pow(BigInteger.valueOf(-8)).equals(f6));
+		assertTrue(f3.pow(BigInteger.valueOf(-7)).equals(f4));
+		assertTrue(f3.pow(BigInteger.valueOf(-6)).equals(f2));
+		assertTrue(f3.pow(BigInteger.valueOf(-5)).equals(f7));
+		assertTrue(f3.pow(BigInteger.valueOf(-4)).equals(f5));
+		assertTrue(f3.pow(BigInteger.valueOf(-3)).equals(f3));
+		assertTrue(f3.pow(BigInteger.valueOf(-2)).equals(f1));
+		assertTrue(f3.pow(BigInteger.valueOf(-1)).equals(f6));
+		assertTrue(f3.pow(BigInteger.valueOf(0)).equals(f1));
+		assertTrue(f3.pow(BigInteger.valueOf(1)).equals(f3));
 		assertTrue(f3.pow(BigInteger.valueOf(2)).equals(f5));
 		assertTrue(f3.pow(BigInteger.valueOf(3)).equals(f7));
 		assertTrue(f3.pow(BigInteger.valueOf(4)).equals(f2));
@@ -157,6 +168,7 @@ public class NonPrimeFieldElementTest {
 		assertTrue(f3.pow(BigInteger.valueOf(6)).equals(f6));
 		assertTrue(f3.pow(BigInteger.valueOf(7)).equals(f1));
 		assertTrue(f3.pow(BigInteger.valueOf(8)).equals(f3));
+		assertTrue(f3.pow(BigInteger.valueOf(9)).equals(f5));
 	}
 	
 	@Test
@@ -182,6 +194,25 @@ public class NonPrimeFieldElementTest {
 		FieldElement f14 = new NonPrimeFieldElement(p, m, n, 13);
 		FieldElement f15 = new NonPrimeFieldElement(p, m, n, 14);
 		
+		assertTrue(f3.pow(BigInteger.valueOf(-17)).equals(f1));
+		assertTrue(f3.pow(BigInteger.valueOf(-16)).equals(f14));
+		assertTrue(f3.pow(BigInteger.valueOf(-15)).equals(f12));
+		assertTrue(f3.pow(BigInteger.valueOf(-14)).equals(f10));
+		assertTrue(f3.pow(BigInteger.valueOf(-13)).equals(f8));
+		assertTrue(f3.pow(BigInteger.valueOf(-12)).equals(f6));
+		assertTrue(f3.pow(BigInteger.valueOf(-11)).equals(f4));
+		assertTrue(f3.pow(BigInteger.valueOf(-10)).equals(f2));
+		assertTrue(f3.pow(BigInteger.valueOf(-9)).equals(f15));
+		assertTrue(f3.pow(BigInteger.valueOf(-8)).equals(f13));
+		assertTrue(f3.pow(BigInteger.valueOf(-7)).equals(f11));
+		assertTrue(f3.pow(BigInteger.valueOf(-6)).equals(f9));
+		assertTrue(f3.pow(BigInteger.valueOf(-5)).equals(f7));
+		assertTrue(f3.pow(BigInteger.valueOf(-4)).equals(f5));
+		assertTrue(f3.pow(BigInteger.valueOf(-3)).equals(f3));
+		assertTrue(f3.pow(BigInteger.valueOf(-2)).equals(f1));
+		assertTrue(f3.pow(BigInteger.valueOf(-1)).equals(f14));
+		assertTrue(f3.pow(BigInteger.valueOf(0)).equals(f1));
+		assertTrue(f3.pow(BigInteger.valueOf(1)).equals(f3));
 		assertTrue(f3.pow(BigInteger.valueOf(2)).equals(f5));
 		assertTrue(f3.pow(BigInteger.valueOf(3)).equals(f7));
 		assertTrue(f3.pow(BigInteger.valueOf(4)).equals(f9));
@@ -197,6 +228,7 @@ public class NonPrimeFieldElementTest {
 		assertTrue(f3.pow(BigInteger.valueOf(14)).equals(f14));
 		assertTrue(f3.pow(BigInteger.valueOf(15)).equals(f1));
 		assertTrue(f3.pow(BigInteger.valueOf(16)).equals(f3));
+		assertTrue(f3.pow(BigInteger.valueOf(17)).equals(f5));
 	}
 	
 	@Test

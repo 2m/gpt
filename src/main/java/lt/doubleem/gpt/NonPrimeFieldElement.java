@@ -196,7 +196,17 @@ public class NonPrimeFieldElement extends FieldElement {
 
 	@Override
 	public FieldElement pow(BigInteger i) {
+		if (BigInteger.ZERO.equals(i)) {
+			return getOne();
+		}
+		
 		FieldElement result = new NonPrimeFieldElement(p, m, n, power);
+		
+		if (i.compareTo(BigInteger.ZERO) < 0) {
+			result = result.inv();
+			i = i.multiply(BigInteger.valueOf(-1));
+		}
+		
     	while (i.compareTo(BigInteger.ONE) > 0) {
     		result = result.mul(this);
     		i = i.subtract(BigInteger.ONE);
