@@ -3,6 +3,10 @@ package lt.doubleem.gpt;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -214,5 +218,32 @@ public class NonPrimeFieldElementTest {
 		assertTrue(f2.inv().equals(f7));
 		assertTrue(f3.inv().equals(f6));
 		assertTrue(f4.inv().equals(f5));
+	}
+	
+	@Test
+	public void shouldReturnPrimitiveElement_2_3_1() {
+		int p = 2;
+		int m = 3;
+		int n = 1;
+		
+		Set<NonPrimeFieldElement> allEmenets = new HashSet<>();
+		allEmenets.add(new NonPrimeFieldElement(p, m, n, 0));
+		allEmenets.add(new NonPrimeFieldElement(p, m, n, 1));
+		allEmenets.add(new NonPrimeFieldElement(p, m, n, 2));
+		allEmenets.add(new NonPrimeFieldElement(p, m, n, 3));
+		allEmenets.add(new NonPrimeFieldElement(p, m, n, 4));
+		allEmenets.add(new NonPrimeFieldElement(p, m, n, 5));
+		allEmenets.add(new NonPrimeFieldElement(p, m, n, 6));
+		
+		NonPrimeFieldElement primitiveElement = (NonPrimeFieldElement) allEmenets.iterator().next().getPrimitiveElement();
+		NonPrimeFieldElement element = (NonPrimeFieldElement) primitiveElement.getOne().mul(primitiveElement);
+		Set<NonPrimeFieldElement> generatedEmenets = new HashSet<>();
+		while (!element.isOne()) {
+			generatedEmenets.add(element);
+			element = (NonPrimeFieldElement) element.mul(primitiveElement);
+		}
+		generatedEmenets.add(element); // add one
+		
+		assertTrue(generatedEmenets.equals(allEmenets));
 	}
 }
