@@ -52,6 +52,29 @@ public class LinearizedPolynomialTest {
 	}
 	
 	@Test
+	public void shouldDividePolynomialsWithNonPrimeFieldElementCoeficients() {
+		BigInteger p = BigInteger.valueOf(2);
+		BigInteger m = BigInteger.valueOf(1);
+		BigInteger N = BigInteger.valueOf(4);
+		
+		BigInteger powerOfPrime = p.pow(m.multiply(N).intValue());
+		
+		ArrayList<NonPrimeFieldElement> fCoef = new ArrayList<>();
+		fCoef.add(new NonPrimeFieldElement(p, m, N, -1));
+		fCoef.add(new NonPrimeFieldElement(p, m, N, -1));
+		fCoef.add(new NonPrimeFieldElement(p, m, N, 0));
+		LinearizedPolynomial<NonPrimeFieldElement> f = new LinearizedPolynomial<NonPrimeFieldElement>(powerOfPrime, fCoef);
+		
+		ArrayList<NonPrimeFieldElement> gCoef = new ArrayList<>();
+		gCoef.add(new NonPrimeFieldElement(p, m, N, 0));
+		gCoef.add(new NonPrimeFieldElement(p, m, N, -1));
+		LinearizedPolynomial<NonPrimeFieldElement> g = new LinearizedPolynomial<>(powerOfPrime, gCoef);
+		
+		LinearizedPolynomial<NonPrimeFieldElement> actual = f.div(g.trim());
+		assertEquals(f, actual);
+	}
+	
+	@Test
 	public void shouldNotDividePolynomials() {
 		BigInteger powerOfPrime = BigInteger.valueOf(3).pow(2);
 		LinearizedPolynomial<FiniteFieldElement> f1 = new LinearizedPolynomial<>(powerOfPrime, new FiniteFieldElement(powerOfPrime), "0058");
