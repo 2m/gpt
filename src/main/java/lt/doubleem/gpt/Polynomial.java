@@ -355,7 +355,7 @@ public class Polynomial<T extends FieldElement> {
      * the only coefficient is also zero.
      */
     public boolean isZero() {
-        return (this.deg() == 0 && this.getCoef(0).isZero());
+        return trim().deg() == -1;
     }
 
     public String toString() {
@@ -378,14 +378,15 @@ public class Polynomial<T extends FieldElement> {
             return false;
         }
 
-        Polynomial<T> a = (Polynomial<T>)o;
+        Polynomial<T> a = trim();
+        Polynomial<T> b = ((Polynomial<T>)o).trim();
 
-        if (this.deg() != a.deg()) {
+        if (a.deg() != b.deg()) {
             return false;
         }
 
-        for (int i = 0; i <= this.deg(); i ++) {
-            if (!this.getCoef(i).equals(a.getCoef(i))) {
+        for (int i = 0; i <= a.deg(); i ++) {
+            if (!a.getCoef(i).equals(b.getCoef(i))) {
                 return false;
             }
         }
@@ -394,7 +395,7 @@ public class Polynomial<T extends FieldElement> {
     }
 
     public int hashCode() {
-        return p.hashCode();
+        return trim().p.hashCode();
     }
 
     /**

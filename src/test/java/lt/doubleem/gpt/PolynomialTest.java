@@ -51,4 +51,38 @@ public class PolynomialTest {
 		expected = new Polynomial<>(new FiniteFieldElement(p), "002");
 		assertEquals(expected, actual);
 	}
+	
+	@Test
+	public void shouldBeZero() {
+		int p = 7;
+		
+		assertTrue(new Polynomial<FiniteFieldElement>(new FiniteFieldElement(p), "0").isZero());
+		assertTrue(new Polynomial<FiniteFieldElement>(new FiniteFieldElement(p), "0000").isZero());
+		assertTrue(new Polynomial<FiniteFieldElement>(new FiniteFieldElement(p), "").isZero());
+	}
+	
+	@Test
+	public void shouldBeEqual() {
+		int p = 7;
+		
+		Polynomial<FiniteFieldElement> actual = new Polynomial<>(new FiniteFieldElement(p), "00100");
+		Polynomial<FiniteFieldElement> expected = new Polynomial<>(new FiniteFieldElement(p), "001");
+		assertEquals(expected, actual);
+		assertEquals(expected.hashCode(), actual.hashCode());
+		
+		actual = new Polynomial<>(new FiniteFieldElement(p), "0000");
+		expected = new Polynomial<>(new FiniteFieldElement(p), "00");
+		assertEquals(expected, actual);
+		assertEquals(expected.hashCode(), actual.hashCode());
+		
+		actual = new Polynomial<>(new FiniteFieldElement(p), "0");
+		expected = new Polynomial<>(new FiniteFieldElement(p), "00");
+		assertEquals(expected, actual);
+		assertEquals(expected.hashCode(), actual.hashCode());
+		
+		actual = new Polynomial<>(new FiniteFieldElement(p), "00");
+		expected = new Polynomial<>(new FiniteFieldElement(p), "");
+		assertEquals(expected, actual);
+		assertEquals(expected.hashCode(), actual.hashCode());
+	}
 }
