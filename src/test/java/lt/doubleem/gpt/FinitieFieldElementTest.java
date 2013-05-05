@@ -23,6 +23,11 @@ public class FinitieFieldElementTest {
 	}
 	
 	@Test
+	public void shouldReturnPrimitiveElement_2() {
+		shouldReturnPrimitiveElement(2);
+	}
+	
+	@Test
 	public void shouldReturnPrimitiveElement_7() {
 		shouldReturnPrimitiveElement(7);
 	}
