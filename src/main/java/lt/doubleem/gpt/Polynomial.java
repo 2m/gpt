@@ -92,7 +92,7 @@ public class Polynomial<T extends FieldElement> {
      */
     @SuppressWarnings("unchecked")
     public void setCoef(int i, T value) {
-        while (this.deg() < i) {
+        while (this.p.size() <= i) {
             this.p.add((T)value.getZero());
         }
 

@@ -1,5 +1,6 @@
 package lt.doubleem.gpt;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -19,5 +20,35 @@ public class PolynomialTest {
 		
 		assertTrue(new Polynomial<FiniteFieldElement>(new FiniteFieldElement(p), "").deg() == -1);
 		assertTrue(new Polynomial<FiniteFieldElement>(new FiniteFieldElement(p), "0").deg() == -1);
+	}
+	
+	@Test
+	public void shouldSetCoef() {
+		int p = 7;
+		
+		Polynomial<FiniteFieldElement> actual = new Polynomial<>(new FiniteFieldElement(p), "001");
+		actual.setCoef(0, new FiniteFieldElement(p, 1));
+		Polynomial<FiniteFieldElement> expected = new Polynomial<>(new FiniteFieldElement(p), "101");
+		assertEquals(expected, actual);
+		
+		actual = new Polynomial<>(new FiniteFieldElement(p), "001");
+		actual.setCoef(2, new FiniteFieldElement(p, 2));
+		expected = new Polynomial<>(new FiniteFieldElement(p), "002");
+		assertEquals(expected, actual);
+		
+		actual = new Polynomial<>(new FiniteFieldElement(p), "001");
+		actual.setCoef(5, new FiniteFieldElement(p, 2));
+		expected = new Polynomial<>(new FiniteFieldElement(p), "001002");
+		assertEquals(expected, actual);
+		
+		actual = new Polynomial<>(new FiniteFieldElement(p), "000");
+		actual.setCoef(1, new FiniteFieldElement(p, 2));
+		expected = new Polynomial<>(new FiniteFieldElement(p), "02");
+		assertEquals(expected, actual);
+		
+		actual = new Polynomial<>(new FiniteFieldElement(p), "");
+		actual.setCoef(2, new FiniteFieldElement(p, 2));
+		expected = new Polynomial<>(new FiniteFieldElement(p), "002");
+		assertEquals(expected, actual);
 	}
 }
