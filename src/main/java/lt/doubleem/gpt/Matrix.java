@@ -129,6 +129,15 @@ public class Matrix<T extends FieldElement> {
 		return result.getMatrix(rows, cols, 0, cols);
 	}
 	
+	public Matrix<T> pseudoinv() {
+		if (rows <= cols) {
+			return transpose().mul(mul(transpose()).inv());
+		}
+		else {
+			return transpose().mul(this).inv().mul(transpose());
+		}
+	}
+	
 	public Matrix<T> appendIndentity() {
 		Matrix<T> result = new Matrix<>(rows, cols + rows);
 		for (int i = 0; i < rows; i++) {
@@ -232,6 +241,24 @@ public class Matrix<T extends FieldElement> {
 			for (int j = 0; j < cols; j++) {
 				if (!get(i, j).isZero()) {
 					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public boolean isOne() {
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (i == j) {
+					if (!get(i, j).isOne()) {
+						return false;
+					}
+				}
+				else {
+					if (!get(i, j).isZero()) {
+						return false;
+					}
 				}
 			}
 		}

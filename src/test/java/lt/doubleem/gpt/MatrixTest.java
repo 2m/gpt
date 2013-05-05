@@ -88,6 +88,8 @@ public class MatrixTest {
 		inverse.set(2, 2, new FiniteFieldElement(11, 1));
 		
 		assertTrue(inverse.equals(m.inv()));
+		assertTrue(m.mul(inverse).isOne());
+		assertTrue(inverse.mul(m).isOne());
 	}
 	
 	@Test
@@ -490,5 +492,47 @@ public class MatrixTest {
 		m2.set(2, 4, new NonPrimeFieldElement(p, q, n, 3));
 		
 		assertTrue(m1.standardize().equals(m2));
+	}
+	
+	@Test
+	public void shouldFindPseudoinverse_2_4() {
+		int p = 11;
+		
+		Matrix<FiniteFieldElement> m = new Matrix<>(2, 4);
+		
+		m.set(0, 0, new FiniteFieldElement(p, 4));
+		m.set(0, 1, new FiniteFieldElement(p, 6));
+		m.set(0, 2, new FiniteFieldElement(p, 0));
+		m.set(0, 3, new FiniteFieldElement(p, 1));
+		
+		m.set(1, 0, new FiniteFieldElement(p, 9));
+		m.set(1, 1, new FiniteFieldElement(p, 2));
+		m.set(1, 2, new FiniteFieldElement(p, 0));
+		m.set(1, 3, new FiniteFieldElement(p, 1));
+		
+		Matrix<FiniteFieldElement> pseudoinv = m.pseudoinv();  
+		assertTrue(m.mul(pseudoinv).isOne());
+	}
+	
+	@Test
+	public void shouldFindPseudoinverse_4_2() {
+		int p = 11;
+		
+		Matrix<FiniteFieldElement> m = new Matrix<>(4, 2);
+		
+		m.set(0, 0, new FiniteFieldElement(p, 4));
+		m.set(0, 1, new FiniteFieldElement(p, 9));
+		
+		m.set(1, 0, new FiniteFieldElement(p, 6));
+		m.set(1, 1, new FiniteFieldElement(p, 2));
+		
+		m.set(2, 0, new FiniteFieldElement(p, 0));
+		m.set(2, 1, new FiniteFieldElement(p, 0));
+		
+		m.set(3, 0, new FiniteFieldElement(p, 1));
+		m.set(3, 1, new FiniteFieldElement(p, 1));
+		
+		Matrix<FiniteFieldElement> pseudoinv = m.pseudoinv();  
+		assertTrue(pseudoinv.mul(m).isOne());
 	}
 }
