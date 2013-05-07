@@ -210,6 +210,20 @@ public class Matrix<T extends FieldElement> {
 		return result;
 	}
 	
+	public Matrix<T> sub(Matrix<T> b) {
+		if (rows != b.rows || cols != b.cols) {
+			throw new ArithmeticException(String.format("Unable to add."));
+		}
+		
+		Matrix<T> result = getMatrix(rows, cols, 0, 0);
+		for (int row = 0; row < rows; row++) {
+			for (int col = 0; col < cols; col++) {
+				result.set(row, col, (T) result.get(row, col).sub(b.get(row, col)));
+			}
+		}
+		return result;
+	}
+	
 	public Matrix<T> transpose() {
 		Matrix<T> result = new Matrix<>(cols, rows);
 		for (int row = 0; row < rows; row++) {

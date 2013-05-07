@@ -247,6 +247,40 @@ public class MatrixTest {
 	}
 	
 	@Test
+	public void shouldSubtractTwoMatrices() {
+		int q = 10;
+		
+		Matrix<FiniteFieldElement> m1 = new Matrix<>(2, 3);		
+		m1.set(0, 0, new FiniteFieldElement(q, 1));
+		m1.set(0, 1, new FiniteFieldElement(q, 2));
+		m1.set(0, 2, new FiniteFieldElement(q, 3));
+		
+		m1.set(1, 0, new FiniteFieldElement(q, 7));
+		m1.set(1, 1, new FiniteFieldElement(q, 8));
+		m1.set(1, 2, new FiniteFieldElement(q, 9));
+		
+		Matrix<FiniteFieldElement> m2 = new Matrix<>(2, 3);		
+		m2.set(0, 0, new FiniteFieldElement(q, 5));
+		m2.set(0, 1, new FiniteFieldElement(q, 6));
+		m2.set(0, 2, new FiniteFieldElement(q, 7));
+		
+		m2.set(1, 0, new FiniteFieldElement(q, 3));
+		m2.set(1, 1, new FiniteFieldElement(q, 4));
+		m2.set(1, 2, new FiniteFieldElement(q, 5));
+		
+		Matrix<FiniteFieldElement> m3 = new Matrix<>(2, 3);		
+		m3.set(0, 0, new FiniteFieldElement(q, 6));
+		m3.set(0, 1, new FiniteFieldElement(q, 6));
+		m3.set(0, 2, new FiniteFieldElement(q, 6));
+		
+		m3.set(1, 0, new FiniteFieldElement(q, 4));
+		m3.set(1, 1, new FiniteFieldElement(q, 4));
+		m3.set(1, 2, new FiniteFieldElement(q, 4));
+		
+		assertTrue(m3.equals(m1.sub(m2)));
+	}
+	
+	@Test
 	public void shouldTranspose() {
 		Matrix<FiniteFieldElement> m1 = new Matrix<>(3, 3);		
 		m1.set(0, 0, new FiniteFieldElement(11, 1));
