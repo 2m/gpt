@@ -1,5 +1,8 @@
 package lt.doubleem.gpt;
 
+import static lt.doubleem.gpt.MrdEncodeTest.getGeneratorMatrix;
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,111 +10,234 @@ import java.util.List;
 import org.junit.Test;
 
 public class MrdDecodeTest {
-	
+
 	@Test
-	public void shouldDecodeMrd() {
+	public void shouldCalculateAllErrorVectors() {
 		BigInteger p = BigInteger.valueOf(2);
 		BigInteger m = BigInteger.valueOf(1);
-		BigInteger n = BigInteger.valueOf(4);
-		BigInteger mod = p.pow(m.multiply(n).intValue());
-		
-		List<NonPrimeFieldElement> s = new ArrayList<>();
-		s.add(new NonPrimeFieldElement(p, m, n, 2));
-		s.add(new NonPrimeFieldElement(p, m, n, 5));
-		s.add(new NonPrimeFieldElement(p, m, n, 7));
-		
-		LinearizedPolynomial<NonPrimeFieldElement> syndromePolynomial = new LinearizedPolynomial<>(mod);
-		int d = 4;
-		for (int i = 0; i <= d - 2; i++) {
-			syndromePolynomial.setCoef(i, s.get(i));
+		BigInteger N = BigInteger.valueOf(4);
+		BigInteger q = p.pow(m.intValue());
+
+		int n = 4; // code word length <= N
+		int k = 2; // code dimension
+		int d = n - k + 1; // code distance
+
+		List<Matrix<NonPrimeFieldElement>> errorVectors = new ArrayList<>();
+
+		Matrix<NonPrimeFieldElement> errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 0));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 9));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 1));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 8));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 1));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 10));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 2));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 9));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 2));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 11));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 3));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 10));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 3));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 12));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 4));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 11));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 4));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 13));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 5));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 12));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 5));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 14));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 6));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 13));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 6));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 0));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 7));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 14));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 7));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 1));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 8));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 0));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 8));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 2));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 9));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 1));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 9));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 3));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 10));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 2));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 10));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 4));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 11));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 3));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 11));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 5));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 12));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 4));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 12));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 6));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 13));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 5));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 13));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 7));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 14));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 6));
+		errorVectors.add(errorVector);
+
+		errorVector = new Matrix<>(1, 4);
+		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 14));
+		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 8));
+		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 0));
+		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 7));
+		errorVectors.add(errorVector);
+
+		Matrix<NonPrimeFieldElement> gMatrix = getGeneratorMatrix(p, m, N, n, k);
+		Matrix<NonPrimeFieldElement> hMatrix = gMatrix.dual();
+
+		Matrix<NonPrimeFieldElement> codeWord = new Matrix<>(1, n);
+		codeWord.set(0, 0, new NonPrimeFieldElement(p, m, N, 0));
+		codeWord.set(0, 1, new NonPrimeFieldElement(p, m, N, 1));
+		codeWord.set(0, 2, new NonPrimeFieldElement(p, m, N, 2));
+		codeWord.set(0, 3, new NonPrimeFieldElement(p, m, N, 3));
+
+		for (Matrix<NonPrimeFieldElement> e : errorVectors) {
+			Matrix<NonPrimeFieldElement> syndrome = codeWord.add(e).mul(hMatrix.transpose());
+			if (!syndrome.isZero()) {
+				assertEquals(e, calculateErrorVector(p, m, N, q, n, k, d, syndrome, hMatrix));
+			}
 		}
-		
-		LinearizedPolynomial<NonPrimeFieldElement> fi_1 = new LinearizedPolynomial<>(mod);
-		fi_1.setCoef(d-1, new NonPrimeFieldElement(p, m, n, 0));		
+	}
+
+	public Matrix<NonPrimeFieldElement> calculateErrorVector(BigInteger p, BigInteger m, BigInteger N, BigInteger q, int n, int k, int d,
+			Matrix<NonPrimeFieldElement> syndrome, Matrix<NonPrimeFieldElement> hMatrix) {
+
+		LinearizedPolynomial<NonPrimeFieldElement> syndromePolynomial = new LinearizedPolynomial<>(q);
+		for (int i = 0; i <= d - 2; i++) {
+			syndromePolynomial.setCoef(i, syndrome.get(0, i));
+		}
+
+		LinearizedPolynomial<NonPrimeFieldElement> x_q_d_1 = new LinearizedPolynomial<>(q);
+		x_q_d_1.setCoef(d - 1, new NonPrimeFieldElement(p, m, N, 0));
+
+		LinearizedPolynomial<NonPrimeFieldElement> fi_1 = x_q_d_1;
 		LinearizedPolynomial<NonPrimeFieldElement> fi = syndromePolynomial;
-		
-		LinearizedPolynomial<NonPrimeFieldElement> bi_1 = new LinearizedPolynomial<>(mod);
-		bi_1.setCoef(1, new NonPrimeFieldElement(p, m, n, 0));
-		LinearizedPolynomial<NonPrimeFieldElement> bi_2 = new LinearizedPolynomial<>(mod);
+
+		LinearizedPolynomial<NonPrimeFieldElement> bi_1 = new LinearizedPolynomial<>(q);
+		bi_1.setCoef(0, new NonPrimeFieldElement(p, m, N, 0));
+		LinearizedPolynomial<NonPrimeFieldElement> bi_2 = new LinearizedPolynomial<>(q);
 		LinearizedPolynomial<NonPrimeFieldElement> bi = null;
-		
+
 		LinearizedPolynomial<NonPrimeFieldElement> gi;
-		
+
 		int mi = 0;
 		while (true) {
-			mi = mi + 1;
+
 			if (fi_1.deg() >= (d - 1) / 2 && fi.deg() < (d - 1) / 2) {
 				break;
 			}
-			
+
+			mi = mi + 1;
+
 			ArrayList<LinearizedPolynomial<NonPrimeFieldElement>> result = fi_1.divisionWithRemainder(fi);
 			gi = result.get(0);
-			
+
 			fi_1 = fi;
 			fi = result.get(1);
-			
+
 			bi = gi.mul(bi_1).add(bi_2);
-			
+
 			bi_2 = bi_1;
 			bi_1 = bi;
 		}
-		
-		NonPrimeFieldElement miu = (NonPrimeFieldElement) bi.getCoef(mi).inv();
-		LinearizedPolynomial<NonPrimeFieldElement> e = bi.mul(miu);
-		LinearizedPolynomial<NonPrimeFieldElement> f = fi.mul(miu).mul(BigInteger.valueOf(-1).pow(mi-1).intValue());
-		List<NonPrimeFieldElement> eRoots = e.getRoots();
-		
-		if (eRoots.size() == 0) {
-			// temporary workaround to test arithmetic operations
-			for (int r = 0; r < mi; r++) {
-				eRoots.add(s.get(r));
-			}
+
+		if (bi == null) {
+			throw new ArithmeticException("Unable to fivide fi_1 by fi");
 		}
-		
+
+		NonPrimeFieldElement miu = (NonPrimeFieldElement) bi.getCoef(bi.deg()).inv();
+		LinearizedPolynomial<NonPrimeFieldElement> e = bi.mul(miu);
+		LinearizedPolynomial<NonPrimeFieldElement> f = fi.mul(miu).mul(BigInteger.valueOf(-1).pow(mi - 1).intValue());
+
+		if (!f.equals(e.mul(syndromePolynomial).rem(x_q_d_1))) {
+			throw new ArithmeticException("Calculated f and e polynomials do not satisfy main equation.");
+		}
+
+		List<NonPrimeFieldElement> eRoots = e.getRoots();
+
+		if (eRoots.size() == 0) {
+			throw new ArithmeticException("No roots found of polynomial e");
+		}
+
+		if (mi != eRoots.size()) {
+			throw new ArithmeticException(String.format("mi is not the same as eRoots.size()! mi:%s, size:%s", mi, eRoots.size()));
+		}
+
 		Matrix<NonPrimeFieldElement> zLinearSystem = new Matrix<>(mi, mi + 1);
 		for (int row = 0; row < mi; row++) {
+			// TODO: fix pow for general case
 			for (int col = 0; col < mi; col++) {
-				zLinearSystem.set(row, col, (NonPrimeFieldElement) eRoots.get(col).inv().pow(mod.pow(row)));
+				zLinearSystem.set(row, col, (NonPrimeFieldElement) eRoots.get(col).pow(q.pow(row)));
 			}
-			zLinearSystem.set(row, mi, (NonPrimeFieldElement) s.get(row).inv().pow(mod.pow(row)));
+			zLinearSystem.set(row, mi, (NonPrimeFieldElement) syndrome.get(0, row).pow(q.pow(row)));
 		}
-		
-		System.out.println(zLinearSystem);		
+
 		zLinearSystem = zLinearSystem.standardize();
-		System.out.println(zLinearSystem);
-		
+
 		Matrix<NonPrimeFieldElement> z = zLinearSystem.getColumn(mi).transpose();
 		Matrix<NonPrimeFieldElement> zMatrix = new Matrix<>(mi, d - 2 + 1);
 		for (int row = 0; row < mi; row++) {
+			// TODO: fix pow for general case
 			for (int col = 0; col < d - 2 + 1; col++) {
-				zMatrix.set(row, col, (NonPrimeFieldElement) z.get(0, row).pow(p.pow(m.intValue()).pow(col)));
+				zMatrix.set(row, col, (NonPrimeFieldElement) z.get(0, row).pow(q.pow(col)));
 			}
 		}
-		System.out.println(zMatrix);
-		
-		List<FieldElement> hList = new ArrayList<>();
-		hList.add(new NonPrimeFieldElement(p, m, n, BigInteger.valueOf(0)));
-		hList.add(new NonPrimeFieldElement(p, m, n, BigInteger.valueOf(1)));
-		hList.add(new NonPrimeFieldElement(p, m, n, BigInteger.valueOf(2)));
-		hList.add(new NonPrimeFieldElement(p, m, n, BigInteger.valueOf(3)));
-		
-		Matrix<NonPrimeFieldElement> hMatrix = new Matrix<>(d - 2 + 1, m.intValue());
-		for (int row = 0; row < d - 2 + 1; row++) {
-			for (int col = 0; col < m.intValue(); col++) {
-				hMatrix.set(row, col, (NonPrimeFieldElement) hList.get(col).pow(p.pow(m.intValue()).pow(row)));
-			}
-		}		
-		System.out.println(hMatrix);
-		
-		Matrix<NonPrimeFieldElement> yMatrix = zMatrix.mul(hMatrix.inv());
-		System.out.println(yMatrix);
-		
+
+		Matrix<NonPrimeFieldElement> yMatrix = zMatrix.mul(hMatrix.transpose().pseudoinv());
+
 		Matrix<NonPrimeFieldElement> eMatrix = new Matrix<>(1, eRoots.size());
 		for (int col = 0; col < eRoots.size(); col++) {
 			eMatrix.set(0, col, eRoots.get(col));
 		}
-		Matrix<NonPrimeFieldElement> errMatrix = eMatrix.mul(yMatrix);
-		
-		System.out.println(errMatrix);
+		Matrix<NonPrimeFieldElement> calculatedErrorVector = eMatrix.mul(yMatrix);
+
+		return calculatedErrorVector;
 	}
 }
