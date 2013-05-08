@@ -146,7 +146,7 @@ public class MrdDecodeTest {
 		}
 	}
 
-	public Matrix<NonPrimeFieldElement> calculateErrorVector(BigInteger p, BigInteger m, BigInteger N, BigInteger q, int n, int k, int d,
+	public static Matrix<NonPrimeFieldElement> calculateErrorVector(BigInteger p, BigInteger m, BigInteger N, BigInteger q, int n, int k, int d,
 			Matrix<NonPrimeFieldElement> syndrome, Matrix<NonPrimeFieldElement> hMatrix) {
 
 		LinearizedPolynomial<NonPrimeFieldElement> syndromePolynomial = new LinearizedPolynomial<>(q);
