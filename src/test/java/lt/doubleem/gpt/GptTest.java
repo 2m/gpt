@@ -2,6 +2,7 @@ package lt.doubleem.gpt;
 
 import static lt.doubleem.gpt.MrdDecodeTest.calculateErrorVector;
 import static lt.doubleem.gpt.MrdEncodeTest.getGeneratorMatrix;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
 
@@ -36,8 +37,6 @@ public class GptTest {
 			}
 		}
 		
-		System.out.println(uMatrix);
-		
 		int l = 1;
 		int t1 = 1;
 		
@@ -53,10 +52,7 @@ public class GptTest {
 			}
 		}
 		
-		System.out.println(pMatrix);
-		
-		Matrix<NonPrimeFieldElement> qMatrix = new Matrix<>(l, t1);
-		qMatrix.set(0, 0, new NonPrimeFieldElement(p, m, N, 1));
+		Matrix<NonPrimeFieldElement> qMatrix = gMatrix.getMatrix(l, t1, 0, 0);
 		
 		Matrix<NonPrimeFieldElement> bZeroMatrix = qMatrix;
 		for (int i = 0; i < n - t1; i++) {
@@ -67,25 +63,11 @@ public class GptTest {
 			bZeroMatrix = bZeroMatrix.appendColumn(zeroColumn);
 		}
 		
-		System.out.println(bZeroMatrix);
-		
-		Matrix<NonPrimeFieldElement> bMatrix = bZeroMatrix.mul(pMatrix);
-		
-		System.out.println(bMatrix);
-		
-		Matrix<NonPrimeFieldElement> aMatrix = new Matrix<>(k, l);
-		aMatrix.set(0, 0, (NonPrimeFieldElement) u.getOne());
-		aMatrix.set(1, 0, (NonPrimeFieldElement) u.getZero());
-		
-		System.out.println(aMatrix);
-		
+		Matrix<NonPrimeFieldElement> bMatrix = bZeroMatrix.mul(pMatrix);		
+		Matrix<NonPrimeFieldElement> aMatrix = gMatrix.getMatrix(k, l, 0, 0);		
 		Matrix<NonPrimeFieldElement> xMatrix = aMatrix.mul(bMatrix);
 		
-		System.out.println(xMatrix);
-		
 		Matrix<NonPrimeFieldElement> cCrMatrix = uMatrix.mul(gMatrix).add(xMatrix);
-		
-		System.out.println(cCrMatrix);
 		
 		Matrix<NonPrimeFieldElement> codeWord = new Matrix<>(1, n);
 		codeWord.set(0, 0, new NonPrimeFieldElement(p, m, N, 0));
@@ -104,7 +86,6 @@ public class GptTest {
 		Matrix<NonPrimeFieldElement> calculatedErrorVector = calculateErrorVector(p, m, N, q, n, k, d, syndrome, hMatrix);
 		Matrix<NonPrimeFieldElement> decodedCodeWord = gMatrix.transpose().appendColumn(channelWord.sub(errorVector)).getMatrix(k, k + 1, 0, 0).standardize().getColumn(k).transpose();
 		
-		System.out.println(calculatedErrorVector);
-		System.out.println(decodedCodeWord);
+		assertTrue(calculatedErrorVector.equals(errorVector));
 	}
 }
