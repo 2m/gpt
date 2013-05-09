@@ -52,10 +52,9 @@ public class MrdEncodeTest {
 	
 	protected static Matrix<NonPrimeFieldElement> getGeneratorMatrix(BigInteger p, BigInteger m, BigInteger N, int n, int k) {
 		List<NonPrimeFieldElement> gList = new ArrayList<>();
-		gList.add(new NonPrimeFieldElement(p, m, N, BigInteger.valueOf(0)));
-		gList.add(new NonPrimeFieldElement(p, m, N, BigInteger.valueOf(1)));
-		gList.add(new NonPrimeFieldElement(p, m, N, BigInteger.valueOf(2)));
-		gList.add(new NonPrimeFieldElement(p, m, N, BigInteger.valueOf(3)));
+		for (int i = 0; i < n; i++) {
+			gList.add(new NonPrimeFieldElement(p, m, N, BigInteger.valueOf(i)));
+		}		
 		
 		Matrix<NonPrimeFieldElement> gMatrix = new Matrix<>(k, n);
 		for (int row = 0; row < gMatrix.getRows(); row++) {
