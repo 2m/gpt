@@ -1,10 +1,14 @@
 package lt.doubleem.gpt;
 
+import static lt.doubleem.gpt.ErrorVectors.getAnyErrorVector;
+import static lt.doubleem.gpt.Messages.getAnyMessage;
 import static lt.doubleem.gpt.MrdDecodeTest.calculateErrorVector;
 import static lt.doubleem.gpt.MrdEncodeTest.getGeneratorMatrix;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
+import java.util.Random;
 
 import org.junit.Test;
 
@@ -15,14 +19,34 @@ public class GptTest {
 		BigInteger p = BigInteger.valueOf(2);
 		BigInteger m = BigInteger.valueOf(1);
 		BigInteger N = BigInteger.valueOf(4);
-		BigInteger q = p.pow(m.intValue());
 		
 		int n = 4; // code word length <= N
 		int k = 2; // code dimension
-		int d = n - k + 1; // code distance
 		
 		Matrix<NonPrimeFieldElement> gMatrix = getGeneratorMatrix(p, m, N, n, k);
 		Matrix<NonPrimeFieldElement> hMatrix = gMatrix.dual();
+		
+		Matrix<NonPrimeFieldElement> publicKey = getPublicKey(p, m, N, n, k, gMatrix);
+		
+		Messages.r = new Random(123);
+		ErrorVectors.r = new Random(123);
+		
+		for (int i = 0; i < 1000; i++) {
+			Matrix<NonPrimeFieldElement> message = getAnyMessage(p, m, N, k);		
+			Matrix<NonPrimeFieldElement> errorVector = getAnyErrorVector(p, m, N, n, k);
+			
+			Matrix<NonPrimeFieldElement> channelWord = message.mul(gMatrix).add(errorVector);
+			Matrix<NonPrimeFieldElement> syndrome = channelWord.mul(hMatrix.transpose());
+			Matrix<NonPrimeFieldElement> calculatedErrorVector = calculateErrorVector(p, m, N, n, k, syndrome, hMatrix);
+			Matrix<NonPrimeFieldElement> decodedMessage = gMatrix.transpose().appendColumn(channelWord.sub(calculatedErrorVector)).getMatrix(k, k + 1, 0, 0).standardize().getColumn(k).transpose();
+			
+			assertEquals(errorVector, calculatedErrorVector);
+			assertEquals(message, decodedMessage);
+		}
+	}
+	
+	public static Matrix<NonPrimeFieldElement> getPublicKey(BigInteger p, BigInteger m, BigInteger N, int n, int k, Matrix<NonPrimeFieldElement> gMatrix) {
+		BigInteger q = p.pow(m.intValue());
 		
 		NonPrimeFieldElement u = new NonPrimeFieldElement(p, m, N, 1);
 		Matrix<NonPrimeFieldElement> uMatrix = new Matrix<>(k, k);
@@ -67,25 +91,6 @@ public class GptTest {
 		Matrix<NonPrimeFieldElement> aMatrix = gMatrix.getMatrix(k, l, 0, 0);		
 		Matrix<NonPrimeFieldElement> xMatrix = aMatrix.mul(bMatrix);
 		
-		Matrix<NonPrimeFieldElement> cCrMatrix = uMatrix.mul(gMatrix).add(xMatrix);
-		
-		Matrix<NonPrimeFieldElement> codeWord = new Matrix<>(1, n);
-		codeWord.set(0, 0, new NonPrimeFieldElement(p, m, N, 0));
-		codeWord.set(0, 1, new NonPrimeFieldElement(p, m, N, 1));
-		codeWord.set(0, 2, new NonPrimeFieldElement(p, m, N, 2));
-		codeWord.set(0, 3, new NonPrimeFieldElement(p, m, N, 3));
-		
-		Matrix<NonPrimeFieldElement> errorVector = new Matrix<>(1, 4);
-		errorVector.set(0, 0, new NonPrimeFieldElement(p, m, N, 0));
-		errorVector.set(0, 1, new NonPrimeFieldElement(p, m, N, 9));
-		errorVector.set(0, 2, new NonPrimeFieldElement(p, m, N, 1));
-		errorVector.set(0, 3, new NonPrimeFieldElement(p, m, N, 8));
-		
-		Matrix<NonPrimeFieldElement> channelWord = codeWord.add(errorVector);
-		Matrix<NonPrimeFieldElement> syndrome = channelWord.mul(hMatrix.transpose());
-		Matrix<NonPrimeFieldElement> calculatedErrorVector = calculateErrorVector(p, m, N, q, n, k, d, syndrome, hMatrix);
-		Matrix<NonPrimeFieldElement> decodedCodeWord = gMatrix.transpose().appendColumn(channelWord.sub(errorVector)).getMatrix(k, k + 1, 0, 0).standardize().getColumn(k).transpose();
-		
-		assertTrue(calculatedErrorVector.equals(errorVector));
+		return uMatrix.mul(gMatrix).add(xMatrix);
 	}
 }
