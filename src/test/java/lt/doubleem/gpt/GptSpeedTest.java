@@ -24,7 +24,7 @@ public class GptSpeedTest {
 		int n = 4; // code word length <= N
 		int k = 2; // code dimension
 		
-		int iterations = 100000;
+		int iterations = 10000;
 		int testRuns = 10;
 		
 		timedEOperation(p, m, N, n, k, iterations, testRuns, Operation.ENCODE);
